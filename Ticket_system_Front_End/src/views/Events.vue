@@ -6,6 +6,7 @@
         </header>
         <section class="content">
         <event v-for="event in events" :key="event.id" :event="event" />
+
         </section>
         <pager :activeStep="activeStep"/>
     </main>
@@ -44,7 +45,7 @@ export default {
   background: $darkblue;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 3rem;
   box-sizing: border-box;
 
 
@@ -76,6 +77,8 @@ export default {
             font-size: 2.2rem;
             margin: .5rem 0;
         }
+
+
     }
 
   .content {

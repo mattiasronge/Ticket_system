@@ -1,10 +1,6 @@
-# wia
 
-## Descrition
-Vue.js Front-End of Where its @ project.
-
-[Mockup found here](https://www.figma.com/file/RepGAyw1p3xcWlS1etkNxgP3/Where-its?node-id=0%3A1)
-
+## Write in API Terminal:
+PASSWORD=titanic nodemon index
 
 ## Project setup
 ```

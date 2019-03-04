@@ -1,7 +1,6 @@
 <template>
     <main id="pay">
         <section class="content" v-if="event">
-        <p>You are about to score some sweet tickets to</p>
         <h1>{{ event.name }}</h1>
         <p class="when">{{ event.when.date }} {{ event.when.from }} - {{ event.when.to }}</p>
         <p class="where">@ Globen</p>
