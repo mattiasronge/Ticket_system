@@ -3,12 +3,14 @@
       <header>
           <h1>Verify code</h1>
       </header>
+      
     <section class="content">
         <section class="verification" v-if="verification">
             <h1 v-if="verification.verified">Valid</h1>
             <h1 v-if="!verification.verified">NOT valid</h1>
             {{ verification.msg }}
         </section>
+
         <section class="form">
             <input type="text" name="code" :value="code.toUpperCase()" @input="code = $event.target.value.toUpperCase()" :maxlength="codeLength" />
             <a href="#" class="verify" @click="verifyTicket">Verify code</a>
@@ -23,7 +25,7 @@ export default {
   data(){
     return {
         code: '',
-        codeLength: 5
+        codeLength: 5,
     }
   },
   computed: {

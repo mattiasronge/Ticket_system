@@ -1,88 +1,55 @@
-// TICKETS
 
-// model
+/* Tickets route for where is's @ app */
+
+//Models
 let Ticket = require('../models/ticket');
 let Event = require('../models/event');
 
-// GET
-module.exports.get = async (req, res) => {
-    
+module.exports.post = async(req, res) => {
+
     try {
-
-        res.status(200).send( await Ticket.find({}) );        
-    
-    } catch(err){
-    
-        res.status(500).send(err.stack);
-    
-    }
-}
-
-// POST
-module.exports.post = async (req, res) => {
-    
-    try {
-
-        // Finns biljetter? Får min beställning plats?
-        // Uppdatera event med sålda biljetter
-
-        // get event info
+        // Get event
         let event = await Event.findById(req.body.event);
+        let tickets = [];
 
-        if(event.tickets.available >= (event.tickets.sold + req.body.amount)){
-            // Finns biljetter kvar!
-            console.info('Tickets are available!');
-
-            // Uppdatera event > sold tickets
-            let newSold = event.tickets.sold + req.body.amount;
-
-            await Event.findOneAndUpdate({ _id: req.body.event}, {
-                tickets: {
-                    sold: newSold,
-                    available: event.tickets.available    
-                }
-            });
-
-            // Skapa biljetter och skicka tillbaka till FE
-            let tickets = [];
-
-            for(i=0; i<req.body.amount; i++){
-
-                let ticket = {
-                    event: event,
-                    code: uid(5),
-                    used: false
-                }
-
-                tickets.push(ticket);
+        // Loops through the amount customer wants.   
+        for (i = 0; i < req.body.amount; i++) {
+            let ticket = {
+                event: event,
+                code: uid(5),
+                used: false
             }
-
-            // write tickets to Mongo
-            let resp = await Ticket.create(tickets);
-
-            // Send to FrontEnd
-            res.status(200).send(resp);
-
-        } else {
-            // Finns INTE biljetter kvar.
-            console.info('Sorry, all tickets are sold.');
-            res.status(200).send('Sorry, all tickets are sold.');
+            tickets.push(ticket);
         }
 
-    } catch(err) {
+        // Posts it into the MongoDB
+        let resp = await Ticket.create(tickets);
+        res.status(200).send(resp);
+    } catch (err) {
         res.status(500).send(err.stack);
     }
-}
+};
 
-function uid(len){
+//GET
+module.exports.get = async(req, res) => {
 
-    let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    try {
+        let tickets = await Ticket.find({});
+        res.status(200).send(tickets);
 
-    let Arr = [];
-
-    for(let i=0; i<len; i++){
-        Arr.push(chars[Math.floor(Math.random()*chars.length)]);
+    } catch (err) {
+        res.status(500).send(err);
     }
+};
 
-    return Arr.join('');
+// Unique Ticket ID generator
+function uid(len) {
+    let chars = "ABCDEFGHIJKLMNOPQRSTVWXYZ0123456789";
+    let code = [];
+
+    for (let i = 0; i < len; i++) {
+        let rand = Math.floor(Math.random() * chars.length);
+        code.push(chars[rand]);
+    }
+    return code.join("");
 };
