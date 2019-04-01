@@ -1,7 +1,7 @@
 <template>
     <article class="ticket">
         <section class="what">
-            <p class="type">what</p>
+            <p class="type">Dj</p>
             <h1>{{ ticket.event.name }}</h1>
         </section>
         <section class="where">

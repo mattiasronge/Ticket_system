@@ -1,10 +1,9 @@
 <template>
   <main id="home">
     <section class="content">
-      <img src="../assets/logo.svg" alt="Where its @" @click="$router.push('/events')">
+      <div></div>
       <h1>Where it´s @</h1>
   </section>
-  <pager :activeStep="activeStep"/>
   </main>
 </template>
 
@@ -25,11 +24,18 @@ export default {
 </script>
 <style lang="scss">
 @import '../scss/variables';
-
 #home {
   background: $darkblue;
   display: flex;
   flex-direction: column;
+  div {
+  background-image: url(../assets/festival.jpg);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-size: cover;
+  background-position: 33% 22%;
+}
 
   .content {
     flex: 10;

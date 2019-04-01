@@ -1,7 +1,7 @@
 <template>
   <main id="verify">
       <header>
-          <h1>Verify code</h1>
+          <h1>Verify you ticket code here</h1>
       </header>
       
     <section class="content">
@@ -77,7 +77,7 @@ export default {
         border: .125rem solid $darkblue;
         max-width: 16rem;
         width: 100%;
-        margin: 2rem 0;
+        margin: 10rem 0;
         border-radius: 4px;
         display: flex;
         flex-direction: column;

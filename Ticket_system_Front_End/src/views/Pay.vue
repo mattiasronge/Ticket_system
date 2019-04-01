@@ -3,7 +3,7 @@
         <section class="content" v-if="event">
         <h1>{{ event.name }}</h1>
         <p class="when">{{ event.when.date }} {{ event.when.from }} - {{ event.when.to }}</p>
-        <p class="where">@ Globen</p>
+        <p class="where"></p>
         <section class="counter">
           <article class="price">{{ event.price * amount }} sek</article>
           <article class="decrese" @click=" amount-- ">

@@ -1,15 +1,16 @@
 <template>
-    <main id="events">
-        <header>
-            <h1>Events</h1>
-            <input type="text" name="search" v-model="filter" placeholder="filter">
-        </header>
-        <section class="content">
-        <event v-for="event in events" :key="event.id" :event="event" />
+  <main class="events">
+    <section class="event-title">Events</section>
+    <section class="event-search">
+      <span class="fa fa-search" style="top: 1.8rem; left: 0.7rem; float: left; color: rgba(255, 255, 255, 0.2);"></span>
+      <input type="text" name="search" v-model="search" placeholder="filter">
 
-        </section>
-        <pager :activeStep="activeStep"/>
-    </main>
+    </section>
+    <section class="margin">
+      <event v-for="event in filteredEvents" :key="event.id" :event="event"/>
+    </section>
+
+  </main>
 </template>
 
 <script>
@@ -18,41 +19,44 @@ import pager from '@/components/Pager';
 
 export default {
   name: 'events',
-  data(){
+  data() {
     return {
-      activeStep: 2,
-      filter: null
+      search: '',
     }
   },
   components: {
     pager,
     event
-  },
+ 
+  }, 
   computed: {
-    events(){
-      return this.$store.state.events;
+    events() {
+      return this.$store.state.events
+    },
+    filteredEvents: function() {
+      return this.events.filter((event) => {
+        return event.name.match(this.search.toUpperCase());
+      })
     }
   },
-  beforeMount(){
+  beforeMount() {
     this.$store.dispatch('getEvents');
+    this.$store.state.tickets = []
   }
 }
 </script>
-<style lang="scss">
-@import '../scss/variables';
 
+<style lang="scss" scoped>
+@import '../scss/variables';
 #events {
   background: $darkblue;
   display: flex;
   flex-direction: column;
   padding: 3rem;
   box-sizing: border-box;
-
-
     header {
         @extend %center;
         flex-direction: column;
-
         input {
           width: 100%;
           border: none;
@@ -65,26 +69,19 @@ export default {
           color: rgba($color: #fff, $alpha: .8);
           font-family: 'Fira Sans', sans-serif;
           box-sizing: border-box;
-
           &:focus {
             outline: none;
           }
-
         }
-
         h1 {
             color: $pink;
             font-size: 2.2rem;
             margin: .5rem 0;
         }
-
-
     }
-
   .content {
     flex: 7;
     overflow: scroll;
   }
 }
-
 </style>

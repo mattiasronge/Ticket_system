@@ -1,107 +1,99 @@
 <template>
-    <main id="admin">
-        <img src="../assets/logo.svg" alt="logo" class="logo">
-        <section class="container">
-            <section class="events">
-            <table cellspacing="0">
-                <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td>Where</td>
-                        <td>info</td>
-                        <td>Available Tickets</td>
-                        <td>Sold</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(event, index) in events" :key="index">
-                        <td>{{ event.name }}</td>
-                        <td>{{ event.where.venue }}</td>
-                        <td>{{ event.info }}</td>
-                        <td>{{ event.tickets.available }}</td>
-                        <td>{{ event.tickets.sold }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            </section>
-            <div class="form">
-                <input type="text" class="name" placeholder="name" v-model="newEvent.name" />
-                <input type="text" class="venue" placeholder="venue" v-model="newEvent.where.venue" />
-                <input type="text" class="address" placeholder="address" v-model="newEvent.where.adress" />
-                <input type="text" class="date" placeholder="date" v-model="newEvent.when.date"/>
-                <input type="text" class="time-start" placeholder="time start" v-model="newEvent.when.from" />
-                <input type="text" class="time-end" placeholder="time end" v-model="newEvent.when.to"/>
-                <input type="text" class="info" placeholder="info" v-model="newEvent.info"/>
-                <input type="number" class="price" placeholder="price" v-model="newEvent.price" />
-                <input type="number" class="tickets" placeholder="num of tickets" v-model="newEvent.tickets.available">
-                <a href="#" class="btn" @click="createEvent"> Create event!</a>
-            </div>
-        </section>
-    </main>
+  <main id="admin">
+    <section class="container">
+      <section class="events">
+      <table cellspacing="0">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Where</th>
+            <th>Date</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <!-- Here we import our Events we have added on our DB -->
+        <tbody> 
+          <tr v-for="event in events" :key="event._id" :event="event">
+            <td>{{event.name}}</td>
+            <td>{{event.where.location}}, {{event.where.adress}} </td>
+            <td>{{event.when.date}}</td>
+            <td>{{event.when.from}} - {{event.when.to}}</td>
+          </tr>
+        </tbody>
+      </table>
+      </section>
+       <section>
+         <!-- This is for making a new Event and send it to our DB -->
+         <h1 class="addEvent">Add Event</h1>
+        <footer  class="form">          
+          <input type="text" placeholder="Name" v-model="newEvent.name">
+          <input type="text" placeholder="Location" v-model="newEvent.where.location">
+          <input type="text" placeholder="Address" v-model="newEvent.where.adress">
+          <input type="text" placeholder="Date" v-model="newEvent.when.date">
+          <input type="text" placeholder="Start time" v-model="newEvent.when.from">
+          <input type="text" placeholder="End time" v-model="newEvent.when.to">
+          <input type="number" placeholder="Price" v-model="newEvent.price">
+          <input type="text" placeholder="Venue type" v-model="newEvent.spot">
+          <a href="#" class="btn" @click="createEvent">Add event!</a>
+        </footer>
+      </section>
+    </section>
+  </main>
 </template>
-
 <script>
-export default {
-    name: 'admin',
-    beforeMount(){
-        this.$store.dispatch('getEvents');
-    },
-    data(){
-        return {
-            newEvent: {      
-                name: 'ABBA',
+export default { 
+  name: 'admin',
+    beforeMount() {
+    this.$store.dispatch('getEvents');
+  },    
+  data() {
+    /* my schema from my Database */
+    return {
+newEvent: {      
+                name: '',
                 where: {
-                    venue: 'Trädgårn',
-                    adress: 'Gbggatan 13'
+                    venue: '',
+                    adress: ''
                 },
                 when: {
-                    date: '1 apr',
-                    from: '19.00',
-                    to: '21.00'
+                    date: '',
+                    from: '',
+                    to: ''
                 },
-                info: 'Ståplats',
-                price: 699,
-                tickets: {
-                    available: 700,
-                    sold: 0
-                }
+                price: "",
+
             }
-        }
-    },
-    methods: {
-        async createEvent(){
-
-            //  createEvents
-            this.$store.dispatch('createEvent', this.newEvent);
-
-            // hämta events igen
-            this.$store.dispatch('getEvents');
-
-        }
-    },
-    computed: {
-        events(){
-            return this.$store.state.events;
-        }
     }
+  },
+  /* This runs 2 functions in our store.js: One is getEvent where we get our existing 
+  * Events. Second function it runs is createEvent where it posts upcoming events. */
+  methods: {
+    async createEvent(){
+      this.$store.dispatch('createEvent', this.newEvent);
+      this.$store.dispatch("getEvent");
+    }
+  },
+  computed: {
+    events() {
+      return this.$store.state.events;
+    }
+  }
 }
 </script>
 
+<!-- Styling -->
+
 <style lang="scss">
 @import '../scss/variables';
-
 $baseline: 2.6rem;
-
 #admin {
     @extend %center;
-
     .logo {
         position: fixed;
         width: 4rem;
         left: 2rem;
         top:2rem;
     }
-
     .container {
         max-width: 1000px;
         width: 100%;
@@ -110,25 +102,23 @@ $baseline: 2.6rem;
         grid-template-columns: 2fr 1fr;
         grid-gap: 1rem;
 
+ 
         .events {
-            background: rgba($color: #000, $alpha: .4);
-            border-radius: 3px;
-            padding: 1rem;
+            border-radius: 2px;
+            padding: 3rem;
 
+        
             table {
                 width: 100%;
-                
                 thead {
                     color: $pink;
                     font-size: .8rem;
                     text-transform: uppercase;
-
                     td {
                         padding: .75rem;
                         border-bottom: 1px solid rgba($color: $pink, $alpha: .4);
                     }
                 }
-
                 tbody {
                     tr {
                         td {
@@ -149,9 +139,7 @@ $baseline: 2.6rem;
                 }
             }
         }
-
         .form {
-            background: rgba($color: #000, $alpha: .4);
             border-radius: 3px;
             padding: 1rem;
             display: grid;
@@ -168,7 +156,6 @@ $baseline: 2.6rem;
             "price tickets"
             ". ."
             "btn btn";
-
             input {
                 width: 100%;
                 border: 1px solid rgba($color: #fff, $alpha: .6);
@@ -179,11 +166,9 @@ $baseline: 2.6rem;
                 font-size: 1.2rem;
                 color: white;
                 border-radius: 3px;
-
                 &:focus {
                     border: 1px solid rgba($color: #fff, $alpha: 1);
                 }
-
                 &.name       { grid-area: name; }
                 &.venue      { grid-area: venue; }
                 &.address    { grid-area: address; }
@@ -193,14 +178,12 @@ $baseline: 2.6rem;
                 &.info       { grid-area: info; }
                 &.price      { grid-area: price; }
                 &.tickets    { grid-area: tickets; }
-
                 &::placeholder {
                     font-size: .7rem;
                     transform: translateY(-.6rem);
                     color: rgba($color: #FFF, $alpha: .6);
                 }  
             } 
-
             .btn {
                 grid-area: btn;
                 background: $pink;
@@ -209,7 +192,6 @@ $baseline: 2.6rem;
                 color: white;
                 @extend %center;
                 text-decoration: none;
-
                 &:hover {
                     background: rgba($color: $pink, $alpha: .8);
                 }
@@ -217,5 +199,4 @@ $baseline: 2.6rem;
         }
     }
 }
-
 </style>
